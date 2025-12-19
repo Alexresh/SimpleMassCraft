@@ -6,7 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "RecipeBookWidgetMixin"
+    "RecipeBookWidgetMixin",
+    "StonecutterScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
