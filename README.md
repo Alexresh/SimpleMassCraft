@@ -24,7 +24,7 @@ A lightweight Fabric mod that enables mass crafting directly from Minecraft's re
 
 1. Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft 1.21.4
 2. Install [Fabric API](https://modrinth.com/mod/fabric-api)
-3. Download `SimpleMassCraft-x.x.x.jar` from [Releases](https://github.com/Alexresh/SimpleMassCraft/releases)
+3. Download `SimpleMassCraft-x.x.jar` from [Releases](https://github.com/Alexresh/SimpleMassCraft/releases)
 4. Place the JAR file in your `.minecraft/mods` folder
 5. Launch Minecraft with the Fabric profile
 
