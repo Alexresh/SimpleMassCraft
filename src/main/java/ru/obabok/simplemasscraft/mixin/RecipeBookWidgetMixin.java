@@ -1,12 +1,12 @@
 package ru.obabok.simplemasscraft.mixin;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.recipebook.GhostRecipe;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
-import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
-import net.minecraft.recipe.NetworkRecipeId;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.recipebook.GhostSlots;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
+import net.minecraft.stats.RecipeBook;
+import net.minecraft.world.item.crafting.display.RecipeDisplayId;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,19 +16,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.obabok.simplemasscraft.client.RecipeAutoClick;
 
 
-@Mixin(RecipeBookWidget.class)
+@Mixin(RecipeBookComponent.class)
 public class RecipeBookWidgetMixin {
-    @Shadow private @Nullable NetworkRecipeId selectedRecipeId;
-    @Shadow protected MinecraftClient client;
-    @Shadow @Final private GhostRecipe ghostRecipe;
+    //@Shadow private @Nullable NetworkRecipeId selectedRecipeId;
+    //@Shadow protected MinecraftClient client;
+    //@Shadow @Final private GhostRecipe ghostRecipe;
 
-    @Inject(method = "select", at = @At("HEAD"), cancellable = true)
-    private void select(RecipeResultCollection results, NetworkRecipeId recipeId, CallbackInfoReturnable<Boolean> cir){
-        if (results.isCraftable(recipeId)
-                && Screen.hasAltDown()) {
-            selectedRecipeId = recipeId;
-            ghostRecipe.clear();
-            RecipeAutoClick.startAutoClick(recipeId, client.player.currentScreenHandler.syncId);
+    @Shadow
+    protected Minecraft minecraft;
+
+    @Shadow
+    @Final
+    private GhostSlots ghostSlots;
+
+    @Shadow
+    private @Nullable RecipeDisplayId lastRecipe;
+
+    @Inject(method = "tryPlaceRecipe", at = @At("HEAD"), cancellable = true)
+    private void select(RecipeCollection recipeCollection, RecipeDisplayId recipe, boolean useMaxItems, CallbackInfoReturnable<Boolean> cir){
+        if (recipeCollection.isCraftable(recipe)
+                && minecraft.hasAltDown()) {
+            lastRecipe = recipe;
+            ghostSlots.clear();
+            RecipeAutoClick.startAutoClick(recipe, minecraft.player.containerMenu.containerId);
             cir.setReturnValue(true);
             cir.cancel();
         }
